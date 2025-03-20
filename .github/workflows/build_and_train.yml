@@ -61,13 +61,10 @@ jobs:
             - name: SSH into remote machine, pull Docker image by SHA, and run it
               uses: appleboy/ssh-action@v0.1.9
               with:
-                  host: angua.cs.bath.ac.uk # Replace with the actual remote host
-                  username: ${{ secrets.HEX_CLOUD_USER }} # Replace with the SSH username
-                  password: ${{ secrets.HEX_CLOUD_PASS }} # Replace with the SSH password
-                  port: 22 # Replace with the correct SSH port if it's not 22
+                  host: nitt.cs.bath.ac.uk
+                  username: ${{ secrets.HEX_CLOUD_USER }}
+                  password: ${{ secrets.HEX_CLOUD_PASS }}
+                  port: 22
                   script: |
-                      # Pull the image using the SHA tag
                       hare pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}
-
-                      # Run the container in detached mode with job-id argument
                       hare run -d ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }} train --job-id ${{ steps.push.outputs.digest }}
