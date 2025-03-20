@@ -1,11 +1,13 @@
 #
-name: Create and publish a Docker image
+name: Build docker image and initiate or resume training job
 
-# Configures this workflow to run every time a change is pushed to any branch beginning with `train`.
 on:
-    push:
-        branches: ["train*", "umran/cloud_boilerplate"]
     workflow_dispatch:
+        inputs:
+            job_description:
+                description: "A description or label for this job (optional)"
+                required: false # Make it optional
+                default: ""
 
 # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
@@ -58,7 +60,7 @@ jobs:
                   subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
                   subject-digest: ${{ steps.push.outputs.digest }}
                   push-to-registry: true
-            - name: SSH into remote machine, pull Docker image by SHA, and run it
+            - name: Initiate or resume training job
               uses: appleboy/ssh-action@v0.1.9
               with:
                   host: nitt.cs.bath.ac.uk
@@ -67,4 +69,4 @@ jobs:
                   port: 22
                   script: |
                       hare pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}
-                      hare run -d ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }} train --job-id ${{ steps.push.outputs.digest }}
+                      hare run -d ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }} train --job-id ${{ github.run_id }} --job-description ${{ github.event.inputs.job_description }}
