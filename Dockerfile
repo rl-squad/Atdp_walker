@@ -14,4 +14,4 @@ COPY . /app/
 RUN poetry install
 
 # Set the default command to use Poetry to run your application
-CMD ["poetry", "run", "python", "main.py"]
+ENTRYPOINT ["poetry", "run", "python", "main.py"]
