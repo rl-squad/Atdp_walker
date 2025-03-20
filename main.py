@@ -1,5 +1,5 @@
 import argparse
-from train import train
+import train
 
 def main():
     parser = argparse.ArgumentParser(description="ATDP Walker")
@@ -11,7 +11,7 @@ def main():
     args = parser.parse_args()
     
     if args.command == "train":
-        train(args.job_id)
+        train.train(args.job_id)
 
 if __name__ == "__main__":
     main()
