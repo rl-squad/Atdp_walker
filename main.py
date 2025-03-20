@@ -11,7 +11,7 @@ def main():
     args = parser.parse_args()
     
     if args.command == "train":
-        train()
+        train(args.job_id)
 
 if __name__ == "__main__":
     main()
